@@ -6,20 +6,63 @@ public class BallController : MonoBehaviour
 {
     public float Speed = 1f;
     public Rigidbody2D rigidbody2D;
+    public Vector2 vel;
+
     void Start()
     {
        rigidbody2D = GetComponent<Rigidbody2D>();
-        Vector2 newVelocity = new Vector2();
-        newVelocity.x = Random.Range(-1f, 1f);
-        newVelocity.y = Random.Range(-1f, 1f);
-        rigidbody2D.velocity = newVelocity.normalized * Speed;
-
+            SendBallToRandomDirection();
+    }
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            SendBallToRandomDirection();
+        }
+            
+    }
+    private void SendBallToRandomDirection()
+    {
+        rigidbody2D.velocity = GenerateRandomVector2Without0(true) * Speed;
+        vel = rigidbody2D.velocity;
 
     }
 
 
-    void Update()
+    private Vector2 GenerateRandomVector2Without0(bool shouldReturnNormalized)
     {
+        Vector2 newVelocity = new Vector2();
+        bool shouldGoRight = Random.Range(1, 100) > 50;
+        newVelocity.x = shouldGoRight ? Random.Range(8f, 2f) : Random.Range(-8f, -2f);
+        newVelocity.y = shouldGoRight ? Random.Range(8f, 2f) : Random.Range(-8f, -2f);
+
+        if (shouldReturnNormalized)
+        {
+            return newVelocity.normalized;
+        }
+            return newVelocity;
+        
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        rigidbody2D.velocity = Vector2.Reflect(vel, collision.contacts[0].normal);
+        vel = rigidbody2D.velocity;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (transform.position.x > 0)
+        {
+            print("Right player +1");
+        }
+        if (transform.position.x < 0)
+        {
+            print("Left player +1");
+        }
+        rigidbody2D.velocity = Vector2.zero;
+        transform.position = Vector2.zero;
+       
         
     }
 }
