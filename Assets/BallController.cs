@@ -7,6 +7,7 @@ public class BallController : MonoBehaviour
     public float Speed = 1f;
     public Rigidbody2D rigidbody2D;
     public Vector2 vel;
+    public bool GameStarted;
 
     void Start()
     {
@@ -15,7 +16,7 @@ public class BallController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Space)&&GameStarted ==false)
         {
             SendBallToRandomDirection();
         }
@@ -23,8 +24,11 @@ public class BallController : MonoBehaviour
     }
     private void SendBallToRandomDirection()
     {
+        rigidbody2D.velocity = Vector2.zero;
+        transform.position = Vector2.zero;
         rigidbody2D.velocity = GenerateRandomVector2Without0(true) * Speed;
         vel = rigidbody2D.velocity;
+        GameStarted = true;
 
     }
 
@@ -62,7 +66,7 @@ public class BallController : MonoBehaviour
         }
         rigidbody2D.velocity = Vector2.zero;
         transform.position = Vector2.zero;
-       
+        GameStarted = false;
         
     }
 }
