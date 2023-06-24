@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class BallController : MonoBehaviour
 {
     public float Speed = 1f;
     public Rigidbody2D rigidbody2D;
     public Vector2 vel;
     public bool GameStarted;
+    public ScoreManager scoreManager;
 
     void Start()
     {
@@ -58,11 +58,11 @@ public class BallController : MonoBehaviour
     {
         if (transform.position.x > 0)
         {
-            print("Right player +1");
+            scoreManager.IncrementLeftPlayerScore();
         }
         if (transform.position.x < 0)
         {
-            print("Left player +1");
+            scoreManager.IncrementRightPlayerScore();
         }
         rigidbody2D.velocity = Vector2.zero;
         transform.position = Vector2.zero;
